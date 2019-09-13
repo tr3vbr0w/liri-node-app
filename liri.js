@@ -20,11 +20,16 @@ var media = process.argv[3];
 //This function is called when the user enters 'concert-this' into the command variable
 function bandsInTownReq() {
     var artist = media;
+    //Axios asynch request using .then to return information from the api
     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(
         function(r) {
             console.log(r.data[1].venue)
         }
-    )
+    )};
+//Variable that takes in the information from 
+function spotifyReq() { 
+    var song = media;
+    axios.get('')
 
 }
 //This function determines what the user is interested in returning. I.E movie, song, or concert sought
@@ -33,6 +38,8 @@ function detectSelector() {
         case 'concert-this':
             bandsInTownReq();
             break;
+        case 'spotify-this-song':
+
     }
 }
 
