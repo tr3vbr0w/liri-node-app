@@ -1,4 +1,6 @@
 var axios = require("axios");
+
+var moment=require('moment');
 // require("dotenv").config();
 
 // var keys = require("./keys.js");
@@ -22,9 +24,36 @@ function bandsInTownReq() {
     var artist = media;
     //Axios asynch request using .then to return information from the api
     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(
+        //Axios Response
         function(r) {
-            console.log(r.data[1].venue)
+            for (let i = 0; i < 5; i++) {
+                const shows = r.data[i];
+                console.log('Concert City:'+shows.venue.city +', '+shows.venue.region);
+                console.log('Venue Name: '+shows.venue.name);
+                var dateTime = new Date(shows.datetime);
+                dateTime = moment(dateTime).format('LLLL');
+                console.log('Show Date & Time: '+ dateTime+ '\n');
+                
+                console.log('--------------------------------');
+            }
+        },
+        //Error Response
+        function(error){
+            //Request is made and the server responds with a status code
+            if (error.r) {
+                console.log(error.r.data)
+                console.log(error.r.status)
+                console.log(error.r.header)
+            //Request is made but no response is recieved
+            }else if (error.request){
+                console.log(error.request);
+            //Something happened setting up the request that triggered the error
+            }else {
+                console.log('Error :' + error.message)
+            }
+            console.log(error.config)
         }
+
     )};
 //Variable that takes in the information from 
 function spotifyReq() { 
@@ -32,6 +61,8 @@ function spotifyReq() {
     axios.get('')
 
 }
+
+//This function takes in information from OMDB for movie information, returns it as json
 //This function determines what the user is interested in returning. I.E movie, song, or concert sought
 function detectSelector() {
     switch(command) {
