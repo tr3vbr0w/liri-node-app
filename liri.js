@@ -18,7 +18,7 @@ var moment=require('moment');
 //Set two variables to take the user input from the command line. After the address and npm package, process.argv[2] represents the case in the switch statement, process.argv[3] represents the band, song or movie the user requests information about
 
 var command = process.argv[2];
-var media = process.argv[3];
+var media = process.argv.splice(3).join('');
 //This function is called when the user enters 'concert-this' into the command variable
 function bandsInTownReq() {
     var artist = media;
