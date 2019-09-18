@@ -1,53 +1,70 @@
+
+//Axios NPM Package
 var axios = require("axios");
 
+//Moment JS Package
 var moment = require("moment");
+
+//How to read .env file
 require("dotenv").config();
 
+//Require my seperate JS file, Keys.js
 var keys = require("./keys.js");
 
+//Information to require information from spotify information and create new spotify key
+//Showing Error, cannot find module 'node spotify api'
+var Spotify = require("node-spotify-api")
+var spotify = new Spotify(keys.spotify);
 
-// var spotify = new Spotify(keys.spotify);
-//Make liri.js so that it can take in one of the following commands
-// * `concert-this`
-
-// * `spotify-this-song`
-
-// * `movie-this`
-
-// * `do-what-it-says`
-//Set two variables to take the user input from the command line. After the address and npm package, process.argv[2] represents the case in the switch statement, process.argv[3] represents the band, song or movie the user requests information about
-
+//First input into node is the command
 var command = process.argv[2];
-var media = process.argv.splice(3).join('');
+
+//Second input into node is media, joined on spaces
+var media = process.argv.slice(3).join(' ');
+
 //This function is called when the user enters 'concert-this' into the command variable
 function bandsInTownReq() {
-    var artist = media;
+    if (command === 'concert-this'){
+        var artist = "";
+        for (let i = 3; i < process.argv.length; i++) {
+            artist += process.argv[i];
+        }
+    }
+
+    
+    
     //Axios asynch request using .then to return information from the api
     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(
-        //Axios Response
+        
+    //Axios Response
         function(r) {
             for (let i = 0; i < 5; i++) {
-                const shows = r.data[i];
-                //Takes JSON property datetime, converts it to moment, then converts it to include day of the week, date in word view, and time of the show
-                var dateTime = new Date(shows.datetime);
-                dateTime = moment(dateTime).format('LLLL');
-                console.log('Concert City:'+shows.venue.city +', '+shows.venue.region);
-                console.log('Venue Name: '+shows.venue.name);
-                console.log('Show Date & Time: '+ dateTime + '\n');
-                console.log('--------------------------------\n');
-            }
+            const shows = r.data[i];
+            
+            //Takes JSON property datetime, converts it to moment, then converts it to include day of the week, date in word view, and time of the show
+            var dateTime = new Date(shows.datetime);
+            dateTime = moment(dateTime).format('LLLL');
+            console.log('Concert City:'+shows.venue.city +', '+shows.venue.region);
+            console.log('Venue Name: '+shows.venue.name);
+            console.log('Show Date & Time: '+ dateTime + '\n');
+            console.log('--------------------------------\n');
+        }
         },
+        
         //Error Response
         function(error){
+            
             //Request is made and the server responds with a status code
-            if (error.r) {
+            if (error) {
                 console.log(error.r.data)
                 console.log(error.r.status)
                 console.log(error.r.header)
-            //Request is made but no response is recieved
+            
+                //Request is made but no response is recieved
             }else if (error.request){
                 console.log(error.request);
-            //Something happened setting up the request that triggered the error
+            
+                //Something happened setting up the request that triggered the error
             }else {
                 console.log('Error :' + error.message)
             }
@@ -55,21 +72,45 @@ function bandsInTownReq() {
         }
 
     )};
-//Function that takes media input from user, sets it to song and queries the spotify API
-function spotifyReq() { 
-    var spotifyURL = 'https://accounts.spotify.com/api/token' +
-    var song = media;
-    axios.get('')
 
+    //Function that takes media input from user, sets it to song and queries the spotify API
+function spotifyReq() { 
+    var searchSong;
+    //Defaut searchSong to ace of base
+    if (searchSong === null){
+        searchSong = 'The Sign'
+    }else{
+        searchSong = media;   
+    }
+
+    //Spotify required parameters as an object
+    var spotParam = {
+        "type" : "track",
+        "query": media,
+    }
+    spotify.search(spotParam, function(error, data){
+        console.log('---------------');
+        if (error){
+            console.log('Error: ' + error)
+            break;
+        }
+        
+    });
 }
+
+
 
 function omdbReq() {
     var movie = media;
+    if (media === null){
+        media = 'Mr. Nobody';
+    }
     axios.get("http://www.omdbapi.com/?t="+movie+"&y=&plot=short&apikey=trilogy").then(
-        //Function takes 
+        
+    //Function takes 
         function(r){
             var info = r.data;
-            console.log('The Title of the Movie is: '+ info.Title);
+            console.log('\nThe Title of the Movie is: '+ info.Title);
             console.log('The Release Year of the Movie is: ' + info.Year);
             console.log('The IMDB rating of the Movie is: ' + info.Ratings[0].Value);
             console.log('The Rotten Tomatoes rating of the Movie is: ' +  info.Ratings[1].Value);
@@ -80,15 +121,18 @@ function omdbReq() {
             
         },
         function(error){
+            
             //Request is made and the server responds with a status code
             if (error.r) {
                 console.log(error.r.data)
                 console.log(error.r.status)
                 console.log(error.r.header)
-            //Request is made but no response is recieved
+            
+                //Request is made but no response is recieved
             }else if (error.request){
                 console.log(error.request);
-            //Something happened setting up the request that triggered the error
+            
+                //Something happened setting up the request that triggered the error
             }else {
                 console.log('Error :' + error.message)
             }
@@ -96,7 +140,6 @@ function omdbReq() {
         }
     )};
 
-//This function takes in information from OMDB for movie information, returns it as json
 //This function determines what the user is interested in returning. I.E movie, song, or concert sought
 function detectSelector() {
     switch(command) {
@@ -104,6 +147,7 @@ function detectSelector() {
             bandsInTownReq();
             break;
         case 'spotify-this-song':
+            spotifyReq();
             break;
         case 'movie-this':
             omdbReq();
