@@ -1,9 +1,9 @@
 var axios = require("axios");
 
-var moment=require('moment');
-// require("dotenv").config();
+var moment = require("moment");
+require("dotenv").config();
 
-// var keys = require("./keys.js");
+var keys = require("./keys.js");
 
 
 // var spotify = new Spotify(keys.spotify);
@@ -57,6 +57,7 @@ function bandsInTownReq() {
     )};
 //Function that takes media input from user, sets it to song and queries the spotify API
 function spotifyReq() { 
+    var spotifyURL = 'https://accounts.spotify.com/api/token' +
     var song = media;
     axios.get('')
 
@@ -65,6 +66,7 @@ function spotifyReq() {
 function omdbReq() {
     var movie = media;
     axios.get("http://www.omdbapi.com/?t="+movie+"&y=&plot=short&apikey=trilogy").then(
+        //Function takes 
         function(r){
             var info = r.data;
             console.log('The Title of the Movie is: '+ info.Title);
