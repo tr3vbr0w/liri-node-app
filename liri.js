@@ -105,9 +105,11 @@ function spotifyReq() {
 
 function omdbReq() {
     var movie = media;
-    if (media === null){
-        media = 'Mr. Nobody';
+    if (movie === null){
+        movie = 'Mr. Nobody';
+        return movie;
     }
+    //API Call to omdb
     axios.get("http://www.omdbapi.com/?t="+movie+"&y=&plot=short&apikey=trilogy").then(
         
     //Function takes 
