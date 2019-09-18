@@ -1,4 +1,6 @@
 
+//FileSystem Package
+var fs = require("fs");
 //Axios NPM Package
 var axios = require("axios");
 
@@ -13,8 +15,12 @@ var keys = require("./keys.js");
 
 //Information to require information from spotify information and create new spotify key
 //Showing Error, cannot find module 'node spotify api'
-var Spotify = require("node-spotify-api")
+var Spotify = require("node-spotify-api");
+
 var spotify = new Spotify(keys.spotify);
+
+
+
 
 //First input into node is the command
 var command = process.argv[2];
@@ -24,18 +30,15 @@ var media = process.argv.slice(3).join(' ');
 
 //This function is called when the user enters 'concert-this' into the command variable
 function bandsInTownReq() {
+    //If statement reads concert this and combines the process.argv into a string with no spaces, required by bandsintown
     if (command === 'concert-this'){
         var artist = "";
         for (let i = 3; i < process.argv.length; i++) {
             artist += process.argv[i];
         }
     }
-
-    
-    
-    //Axios asynch request using .then to return information from the api
-    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(
-        
+     //Axios asynch request using .then to return information from the api
+    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(   
     //Axios Response
         function(r) {
             for (let i = 0; i < 5; i++) {
@@ -121,24 +124,37 @@ function omdbReq() {
             
         },
         function(error){
-            
+            console.log("error")
             //Request is made and the server responds with a status code
-            if (error.r) {
-                console.log(error.r.data)
-                console.log(error.r.status)
-                console.log(error.r.header)
-            
-                //Request is made but no response is recieved
-            }else if (error.request){
-                console.log(error.request);
-            
-                //Something happened setting up the request that triggered the error
-            }else {
-                console.log('Error :' + error.message)
-            }
             console.log(error.config)
         }
     )};
+
+//Function for doWhatItSays that reads the first argument in random.txt as the command, the second argument in the command as the media, and outputs a given function based on the command and media as parameters
+function doWhatItSays() {
+    fs.readFile("random.txt","utf8", (error, data) => {
+        //Once Confirmed that I can read the file successfully, split information from random.txt into two different variable and pass through the switch statement for the remaining three cases
+        var random = data.split(",");
+        command = random[0];
+        media = random[1];
+        console.log('Command: '+command);
+        console.log("Media:"+media);
+        
+        switch(command) {
+            case 'concert-this':
+                bandsInTownReq();
+                break;
+            case 'spotify-this-song':
+                spotifyReq();
+                break;
+            case 'movie-this':
+                omdbReq();
+                break;
+            default:
+                console.log("Invalid command entered");
+        };
+    });
+}
 
 //This function determines what the user is interested in returning. I.E movie, song, or concert sought
 function detectSelector() {
@@ -152,8 +168,11 @@ function detectSelector() {
         case 'movie-this':
             omdbReq();
             break;
-        case 'do-what-it says':
+        case 'do-what-it-says':
+            doWhatItSays();
             break;
+        default:
+            console.log("Invalid command entered");
     }
 }
 
