@@ -80,8 +80,8 @@ function bandsInTownReq() {
 function spotifyReq() { 
     var searchSong;
     //Defaut searchSong to ace of base
-    if (searchSong === null){
-        searchSong = 'The Sign'
+    if (media === null){
+        searchSong = 'The Sign';
     }else{
         searchSong = media;   
     }
@@ -92,12 +92,17 @@ function spotifyReq() {
         query : media,
     }
     spotify.search(spotParam, function(error, data){
+        var songReturn = data.tracks.items[0]
         console.log('---------------');
         if (error){
             console.log('Error: ' + error)
             // break;
         }
-        console.log(data);
+        console.log('Song: '+ searchSong);
+        console.log('Artist: '+songReturn.artists[0].name);
+        console.log('Album: '+songReturn.album.name);
+        console.log('Preview URL: '+songReturn.preview_url)
+       
     });
 }
 
