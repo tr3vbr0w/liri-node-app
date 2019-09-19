@@ -88,16 +88,16 @@ function spotifyReq() {
 
     //Spotify required parameters as an object
     var spotParam = {
-        "type" : "track",
-        "query": media,
+        type : "track",
+        query : media,
     }
     spotify.search(spotParam, function(error, data){
         console.log('---------------');
         if (error){
             console.log('Error: ' + error)
-            break;
+            // break;
         }
-        
+        console.log(data);
     });
 }
 
