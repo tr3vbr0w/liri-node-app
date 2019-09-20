@@ -11,13 +11,13 @@ Open your bash capable command line and prepare to run a node file. When you run
 
 ## Screenshots
 
-![Spotify-this](/images/spotify-this.png)
+![Spotify-this](./images/spotify-this.png)
 
-![movie-this](/images/movie-this.png)
+![movie-this](./images/movie-this.png)
 
-![concert-this](/images/concert-this.png)
+![concert-this](./images/concert-this.png)
 
-![do-what-it-says](/images/do-what-it-says.png)
+![do-what-it-says](./images/do-what-it-says.png)
 
 
 ## Link to the deployed Version of the APP
