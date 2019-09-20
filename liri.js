@@ -93,7 +93,7 @@ function spotifyReq() {
     }
     spotify.search(spotParam, function(error, data){
         var songReturn = data.tracks.items[0]
-        console.log('---------------');
+        console.log('\n---------------\n');
         if (error){
             console.log('Error: ' + error)
             // break;
@@ -101,7 +101,7 @@ function spotifyReq() {
         console.log('Song: '+ searchSong);
         console.log('Artist: '+songReturn.artists[0].name);
         console.log('Album: '+songReturn.album.name);
-        console.log('Preview URL: '+songReturn.preview_url)
+        console.log('Preview URL: '+songReturn.preview_url + '\n');
        
     });
 }
